@@ -1,0 +1,30 @@
+{% extends "aien.html" %}
+{% load static %}
+{% block main %}
+
+<h2>Home About!!</h2>   
+{% endblock %}
+{% block content %}
+<h2>Member Index</h2>
+<table class="table table-bordered">
+    <thead>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Password</th>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{user.0}}</td>
+            <td>{{user.1}}</td>
+            <td>{{user.2}}</td>
+            <td>{{user.3}}</td>
+            <td><a href={% url 'member:delete' user.4 %}>刪</a></td>
+            <td><a href={% url 'member:edit' user.4 %}>改</a></td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{% endblock %}
+

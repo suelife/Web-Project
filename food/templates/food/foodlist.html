@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block styles %}
+<style>
+.content{
+    display:none
+}
+p{
+    color: red;
+    font-size: 15px;
+    font-weight: 900;
+}
+</style>
+{% endblock %}
+
+{% block left %}
+
+<ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'base:index' %}">
+                <i class="fa fa-fw fa-home"></i>
+                <span>首頁</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:list' %}">
+                <i class="fas fa-utensils"></i>
+                <span>食物查詢</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record' %}">
+                <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄1</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record_ajax' %}">
+                 <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄2</span>
+            </a>
+        </li>
+    </ul>
+    
+{% endblock %}
+{% block main %}
+<div class="container">
+    <div>
+        <div style="display:inline-block">
+        <div class="input-group">
+        <input type="text"  id="inputlist" placeholder="Search" name="listsearch">
+        <div class="input-group-append" >
+            <button type="submit" class="btn btn-primary" name="search"><i class="fa fa-search"></i>搜尋</button>
+        </div>
+        <p>*本資料庫所列數值單位均為每100g可食部分之含量</p>
+        </div>
+        </div>
+        <!-- {% comment %}
+        <a href="{% url 'food:listchart' %}" class="btn btn-info" style="margin-left:270px"><i class="fas fa-chart-pie"></i>查看圖表</a>
+        {% endcomment %} -->
+        <a href="{% url 'food:listcreate' %}" class="btn btn-success" style="float:right"><i class="fas fa-plus-circle"></i>新增食物</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>食物類別</th>
+                <th>食物名稱(每份=100公克)</th>
+                <th>熱量(kcal)</th>
+                <th>內容</th>
+                <th>編輯</th>   
+            </tr>
+        </thead>
+        <tbody>
+        {% for foodlist in foodlists %}
+            <tr>
+                <td>{{foodlist.foodcategoryid.foodcategory}}</td>
+                <td>{{foodlist.foodname}}</td>
+                <td>{{foodlist.foodcalories}}</td>
+                <td>
+                    <button type="submit" class="btn btn-warning" name="details"><i class="fas fa-info-circle"></i>詳細資料</button>
+                </td>
+                <td>
+                    <a href="{% url 'food:listdelete' foodlist.foodid %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i>刪除</a>
+                    <a href="{% url 'food:listupdate' foodlist.foodid %}" class="btn btn-secondary"><i class="fas fa-user-edit"></i>修改</a>
+                </td>
+            </tr>
+            <tr class='content'>
+                <td colspan="5">
+                每分含量：蛋白質(g)：{{foodlist.foodprotein}}、脂肪(g)：{{foodlist.foodfat}}、碳水化合物(g)：{{foodlist.foodfarbohydrate}}<br>
+                描述：{{foodlist.fooddescription}}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>    
+{% endblock %}
+{% block scripts %}
+<script>
+// 當網頁讀取事件發生時觸發此function    
+$(document).ready(function(){
+// 按下詳細資料按鈕的事件發生時
+    // $("button[name='details']").click(function(){
+    //     $(this).parents("tr").next().toggle()
+    // })
+    $("tbody").on("click","button[name='details']",function(){
+        $(this).parents("tr").next().toggle()
+    })
+//按下搜尋按鈕時
+    $("button[name='search']").click(function(){
+        var search = $('#inputlist').val()
+        $.get('search/',{"search":search},function(jsonstr_datas){
+            // console.log(jsonstr_datas)
+        if(jsonstr_datas=="[]"){
+            alert("查無此資料")
+        }else{
+            $("tbody > tr").remove()
+            jsonobj_datas = JSON.parse(jsonstr_datas)
+            // console.log(jsonobj_datas.length)
+            for(i=0;i<jsonobj_datas.length;i++){
+                $('tbody').append(
+                "<tr>"+
+                "<td>"+jsonobj_datas[i].foodcategory+"</td>"+
+                "<td>"+jsonobj_datas[i].foodname+"</td>"+
+                "<td>"+jsonobj_datas[i].foodcalories+"</td>"+
+                "<td>"+"<button type='submit' class='btn btn-warning' name='details' >"+"<i class='fas fa-info-circle'>"+"</i>"+"詳細資料"+"</button>"+"</td>"+
+                "<td>"+
+                    "<a href='/food/list/delete/"+jsonobj_datas[i].foodid+ "' class='btn btn-danger'>"+"<i class='fas fa-trash-alt'>"+"</i>"+"刪除"+"</a>"+
+                    "<a href='/food/list/update/" +jsonobj_datas[i].foodid+"' class='btn btn-secondary'>"+"<i class='fas fa-user-edit'>"+"</i>"+"修改"+"</a>"+
+                "</td>"+
+                "</tr>"+
+                "<tr class='content'>"+
+                    "<td colspan='5'>"+
+                    "每分含量：蛋白質(g)："+jsonobj_datas[i].foodprotein+"、脂肪(g)："+jsonobj_datas[i].foodfat+"、碳水化合物(g)："+jsonobj_datas[i].foodfarbohydrate+"<br>"+
+                    "描述："+jsonobj_datas[i].fooddescription+
+                    "</td>"+
+                "</tr>"
+                )
+            }
+        }
+        })
+    })        
+})
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="../../static/styles/on_account.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+{% endblock %}
+{% block left %}
+<ul class="sidebar navbar-nav">
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'base:index' %}">
+            <i class="fa fa-fw fa-home"></i>
+            <span>首頁</span>
+        </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'on_account:index' %}">
+            <i class="fas fa-clipboard-list"></i>
+            <span>記帳</span>
+        </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'on_account:chatarea' %}">
+            <i class="fas fa-chart-pie"></i>
+            <span>報表</span>
+        </a>
+    </li>
+</ul>
+{% endblock %}
+{% block main %}
+<div class="card-header row">
+    <div class="col col-md-11">
+        <h1 class="">收支一覽表</h1>
+    </div>
+    <div class="col col-md-1 text-left top">
+        <button type="button" id="buttonSubmit" class="btn btn-info ">新增</button>
+    </div>
+</div>
+<table id="myDataTalbe" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th>金額</th>
+            <th>消費類型</th>
+            <th>備註</th>
+            <th>管理</th>
+        </tr>
+    </thead>
+</table>
+
+
+<div id="dialog-form" title="新增資料">
+    <p class="validateTips"></p>
+    <form>
+        <fieldset>
+            <div class="form-group">
+                <label for="IOtype" class="cols-sm-2 control-label">收支類型 <i class="fab fa-ethereum" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <select name="IOtype" id="IOtype">
+                            <option value="outlay">支出</option>
+                            <option value="income">收入</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <i class="fas fa-usd-circle" aria-hidden="true"></i>
+                <label for="money" class="cols-sm-2 control-label">金額 <i class="fas fa-money-bill-wave" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <input type="text" class="form-control size" name="money" id="money" placeholder="Enter your money" />
+                        <div class="error" id="showerror"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="spendtype" class="cols-sm-2 control-label">消費類型 <i class="fas fa-gem" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <select name="spendtype" id="spendtype">
+                            <option value="食">食</option>
+                            <option value="衣">衣</option>
+                            <option value="住">住</option>
+                            <option value="行">行</option>
+                            <option value="育">育</option>
+                            <option value="樂">樂</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="remark" class="cols-sm-2 control-label">備註 <i class="fas fa-marker" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <textarea name="remark" id="remark" cols="40" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+    </form>
+</div>
+
+<div id="dialog-form-update" title="修改資料">
+    <p class="validateTips"></p>
+    <form>
+        <fieldset>
+            <div class="form-group">
+                <label for="IOtypeup" class="cols-sm-2 control-label">收支類型 <i class="fab fa-ethereum" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <select name="IOtypeup" id="IOtypeup">
+                            <option value="outlay">支出</option>
+                            <option value="income">收入</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <i class="fas fa-usd-circle" aria-hidden="true"></i>
+                <label for="moneyup" class="cols-sm-2 control-label">金額 <i class="fas fa-money-bill-wave" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <input type="text" class="form-control size" name="moneyup" id="moneyup" placeholder="Enter your money" />
+                        <div class="error" id="showerrorup"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="spendtypeup" class="cols-sm-2 control-label">消費類型 <i class="fas fa-gem" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <select name="spendtypeup" id="spendtypeup">
+                            <option value="食">食</option>
+                            <option value="衣">衣</option>
+                            <option value="住">住</option>
+                            <option value="行">行</option>
+                            <option value="育">育</option>
+                            <option value="樂">樂</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="remarkup" class="cols-sm-2 control-label">備註 <i class="fas fa-marker" aria-hidden="true"></i></label>
+                <div class="cols-sm-10">
+                    <div class="">
+                        <textarea name="remarkup" id="remarkup" cols="40" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="../../static/scripts/on_accountTab.js"></script>
+{% endblock %}

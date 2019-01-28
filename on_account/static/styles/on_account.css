@@ -1,0 +1,16 @@
+.title {
+    background-color: #00caca;
+    text-align: center;
+    /* border: 1px silver solid; */
+    margin-bottom: 5px;
+    padding-left: 120px; 
+}
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}
+.error {
+    color: red;
+}
+.top {
+    padding: 9px;
+}

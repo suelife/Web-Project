@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="../../static/styles/user.css">
+{% endblock %}
+{% block left %}
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:index' %}">
+                    <i class="fa fa-fw fa-home"></i>
+                    <span>首頁</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:about' %}">
+                    <i class="fa fa-fw fa-rocket"></i>
+                    <span>關於</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:contact' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>聯絡</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>代辦事項</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>家計簿</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>健康資訊</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'sport:sportrecord' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>運動管理</span></a>
+            </li>
+        </ul>
+{% endblock %}
+{% block main %}
+<div class="card mb-3" id="LoginForm">
+    <div class="card-body" >
+        <div class="login-form" >
+            <div class="main-div">
+                <div class="panel" >
+                    <h2>使用者註冊</h2>
+                </div>
+                <form method="POST" accept-charset="UTF-8" role="form" >
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="yourmail@example.com" name="email" id="email">
+                        <span id="emailmsg" class="warning"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="名稱" name="name">
+                    </div>
+                    <div class="form-group">
+                        <input type="date" name="birthday" placeholder="生日" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group form-group-prepend text-center">
+                            <input type="radio" name="gender" value="male"> 男&nbsp;
+                            <input type="radio" name="gender" value="female"> 女&nbsp;
+                            <input type="radio" name="gender" value="other"> 其他
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                        <input type="password" class="form-control" placeholder="confirm Password">
+                        <span id="pswmsg" class="warning"></span>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button id="submit" type="submit" class="btn btn-primary">註冊</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="../../static/scripts/register.js"></script>
+{% endblock %}

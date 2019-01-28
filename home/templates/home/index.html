@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+    .word {
+        height: 300px;
+        cursor: pointer;
+    }
+
+    .card {
+        display: inline-block;
+        margin: 20px;
+    }
+
+    .body {
+        width: 100%;
+        height: 758px;
+        background-image: url(static/images/bg.jpg);
+    }
+</style>
+{% endblock %}
+
+{% block left %}
+{% include "./homeNav.html" %}
+{% endblock %}
+
+
+{% block main %}
+<div class="card-body body">
+    <a href="{% url 'memo:index' %}"><img class="word" src="static/images/book.png"></a>
+    <a href="{% url 'on_account:index' %}"><img class="word" src="static/images/wealth.png"></a>
+    <a href="{% url 'food:index' %}"><img class="word" src="static/images/food.png"></a>
+    <a href="{% url 'sport:sportrecord' %}"><img class="word" src="static/images/physic.png"></a>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="/static/scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $('img').hover(function () {
+        $(this).fadeTo(500, 0.3)
+    }, function () {
+        $(this).fadeTo(500, 1)
+    })
+</script>
+
+{% endblock %}

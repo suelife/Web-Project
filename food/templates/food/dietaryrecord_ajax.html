@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% block styles %}
+<style>
+.content{
+    display:none
+}
+
+</style>
+{% endblock %}
+
+{% block left %}
+
+<ul class="sidebar navbar-nav">
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'base:index' %}">
+            <i class="fa fa-fw fa-home"></i>
+            <span>首頁</span>
+        </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'food:list' %}">
+            <i class="fas fa-utensils"></i>
+            <span>食物查詢</span>
+        </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'food:record' %}">
+            <i class="fas fa-user-edit"></i>
+            <span>飲食紀錄1</span>
+        </a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'food:record_ajax' %}">
+             <i class="fas fa-user-edit"></i>
+            <span>飲食紀錄2</span>
+        </a>
+    </li>
+</ul>
+
+{% endblock %}
+
+{% block main %}
+   <div class="row">
+     <div id='divleft' class="col-md-12">
+        <table id="dietaryrecord" class="table table-bordered">
+          <thead>
+            <tr>
+                <th>日期</th>
+                <th>時間</th>
+                <th>食物類別</th>
+                <th>食物名稱</th>
+                <th>份數(每100公克)</th>
+                <th>熱量</th>
+                <th>編輯<button type="button" class="btn btn-success" style="margin-left:40px"><i class="fas fa-plus-circle"></i> 新增</button></th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+     </div>
+    
+    
+    <div id='divright' class = "content" > 
+    <form>
+        <div class="form-group row">
+          <label for="inputdate" class="col-sm-2 col-form-label">日期(yyyy-mm-dd，必填)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputdate" placeholder="dietary date" name="dietarydate">
+          </div>         
+        </div>
+
+        <div class="form-group row">
+          <label for="inputtime" class="col-sm-2 col-form-label">時間</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputtime" placeholder="dietary time" name="dietarytime">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="selectcategory" class="col-sm-2 col-form-label">食物類別</label>
+          <div class="col-sm-10">
+              <select id="selectcategory" name="foodcategoryid" class="form-control" placeholder="food category">  
+              {% for foodcategory in foodcategorys %}
+                  <option value="{{foodcategory.foodcategoryid}}">{{foodcategory.foodcategory}}</option>
+              {% endfor %}
+              </select>
+          </div>
+      </div>
+      
+      <div class="form-group row">
+          <label for="selectname" class="col-sm-2 col-form-label">食物名稱</label>
+          <div class="col-sm-10">
+              <select id="selectname" name="foodid" class="form-control" placeholder="food name">  
+              {% for foodlist in foodlists %}
+                  <option value="{{foodlist.foodid}}">{{foodlist.foodname}}(每分熱量:{{foodlist.foodcalories}})</option>
+              {% endfor %}
+              </select>
+          </div>
+      </div>
+
+        <div class="form-group row">
+          <label for="inputshare" class="col-sm-2 col-form-label">份數(輸入數字)</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputshare" placeholder="share" name="share">
+          </div>
+        </div> 
+
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="button" id="buttonSubmit" class="btn btn-primary"><i class="far fa-check-circle"></i>確認新增</button>
+                <button type="button" id="buttonClose" class="btn btn-danger"><i class="far fa-times-circle"></i>關閉新增</button>
+            </div>
+        </div>
+        <!-- 藏使用者ID要讓jquery抓 -->
+        <p id="userid" hidden>{{ luserid }}</p>
+    </form>
+     </div>
+   </div>
+{% endblock%}
+
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+
+//  jquery(ajax) 讀取資料==============================================================  
+    
+    function loadrecord(){
+    //   前端抓使用者id  
+      luserid = $("#userid").text()
+    //   alert(luserid)
+    //   讀取全部資料
+      $.getJSON('/api/foodrestfulDR/'+luserid+'/2000-01-01/9999-12-31/',function(datas){
+        //   console.log(datas)
+          var tb =  $('#dietaryrecord>tbody');
+          var docFrag = $(document.createDocumentFragment())
+          $.each(datas,function(idx,data){
+              //a > index
+              //b > {}
+              var cell1 = $('<td></td>').text(data.dietarydate).attr('contenteditable','true')
+              var cell2 = $('<td></td>').text(data.dietarytime).attr('contenteditable','true')
+              var cell3 = $('<td id='+data.foodcategoryid+'><p contenteditable=true>'+data.foodcategory+'</p></td>')
+            //   var cell4 = $('<td id='+data.foodid+'></td>').text(data.foodname+'(每分熱量:'+data.foodcalories+')').attr('contenteditable','true')
+              var cell4 = $('<td id='+data.foodid+'><p contenteditable=true>'+data.foodname+'(每分熱量:'+data.foodcalories+')'+'</p></td>')
+              var cell5 = $('<td></td>').text(data.share).attr('contenteditable','true')
+              var cell6 = $('<td></td>').text(data.calories).attr('contenteditable','true')
+              var cell7 = $('<td id='+data.recordid+'></td>').html('<button class="btn btn-danger"><i class="fas fa-trash-alt"></i>刪除</button><button class="btn btn-secondary"><i class="fas fa-user-edit"></i>修改</button>')
+              //<tr><td><td><td>
+              var row = $('<tr></tr>').append([cell1,cell2,cell3,cell4,cell5,cell6,cell7])
+              //<tbody><tr>
+              docFrag.append(row)
+          })
+          tb.html(docFrag)
+      })
+    }
+    loadrecord()
+
+
+    //讀取單筆資料(名稱需要修正)
+    //    $.getJSON('/api/foodrestfulDR/1',function(data){        
+    //         console.log(data.id)
+    //         console.log(data.title)
+    //         console.log(data.text)        
+    //   })
+
+    // $('#dietaryrecord td>button:nth-child(1)').click(function(){
+    //   alert('click')
+    // })
+
+
+//jquery(ajax) 新增資料=================================================================
+//如何讓食物名稱下拉式選單跟著食物類別選擇連動
+    
+    $('#buttonSubmit').click(function(){    
+        // 去抓option裡面的字({{foodlist.foodname}}(每分熱量:{{foodlist.foodcalories}}))
+        // 再用正規運算式抓({{foodlist.foodcalories}})熱量數字
+        foodcalories = $('option[value='+$('#selectname').val()+']').text()
+        re = /\d+\.\d+/
+        foodcalories = foodcalories.match(re)
+        // console.log(foodcalories)
+        var datas = {
+        "dietarydate": $('#inputdate').val(),
+        "dietarytime": $('#inputtime').val(),
+        "foodid":$('#selectname').val(),
+        "share":$('#inputshare').val(),
+        // 把抓到的熱量和輸入的份數相乘
+        "calories":parseFloat($('#inputshare').val())*parseFloat(foodcalories),
+        "userid":$("#userid").text(),
+        };
+
+        $.post('/api/foodrestfulDR/',datas,function(data){
+            $('#inputdate').val('')
+            $('#inputtime').val('')
+            $('#selectcategory').val('')
+            $('#selectname').val('')
+            $('#inputshare').val('')
+            loadrecord()
+        })
+        //頁面縮放===================================================================
+        $('#divleft').attr('class','col-md-12')
+        $('#divright').attr('class','content')
+        $('#inputdate').val('')
+        $('#inputtime').val('')
+        $('#selectcategory').val('')
+        $('#selectname').val('')
+        $('#inputshare').val('')
+    })
+
+
+//jquery(ajax) 刪除資料===============================================================
+
+    $('#dietaryrecord>tbody').on('click','button:nth-child(1)',function(){
+         var id = $(this).parents('tr').find('td:nth-child(7)').attr("id")
+        //刪除資料
+            $.ajax({
+                'url':'/api/foodrestfulDR/' + id + '/',
+                'type':'DELETE'
+            }).done(function(data){
+                loadrecord()
+            })
+    })
+
+
+//jquery(ajax) 修改資料===============================================================
+    
+    //滑鼠按到表格上變下拉式選單
+    $('#dietaryrecord>tbody').on('focusin','td:nth-child(3)>p',function(){
+        myP = $(this)
+        myTd = myP.parent('td')
+        myId = myTd.attr('id')
+        console.log(this)
+        $.getJSON('/api/foodrestfulFC/',function(datas){
+            // console.log(datas)
+            myTd.html('<select id="selectcategory" name="foodcategoryid" class="form-control" placeholder="food category"></select>')
+            $.each(datas,function(idx,data){
+                myTd.find('select').append('<option value='+data.foodcategoryid+'>'+data.foodcategory+'</option>')
+            })
+            myTd.find('select').val(myId).focus()
+        })
+    })
+    
+    $('#dietaryrecord>tbody').on('focusin','td:nth-child(4)>p',function(){
+        myP = $(this)
+        myTd = myP.parent('td')
+        myId = myTd.attr('id')
+        // console.log(myId)
+        $.getJSON('/api/foodrestfulFL/',function(datas){
+            // console.log(datas)
+            myTd.removeAttr('contenteditable').html('<select id="selectname" name="foodid" class="form-control" placeholder="food name"></select>')
+            $.each(datas,function(idx,data){
+                myTd.find('select').append('<option value='+data.foodid+'>'+data.foodname+'(每分熱量:'+data.foodcalories+')</option>')
+            })
+            myTd.find('select').val(myId).focus()
+        })
+    })
+
+
+    //滑鼠移開把選到的資料寫到表格
+    $('#dietaryrecord>tbody').on('focusout','td:nth-child(3)',function(){
+        myTd = $(this)
+        myID = myTd.find('select').val()
+        myText = myTd.find('option[value =' +myID+']').text()
+        // console.log(myText)
+        myTd.attr('id',myID).html('<p contenteditable=true>'+myText+'</p>') 
+
+    })
+
+    $('#dietaryrecord>tbody').on('focusout','td:nth-child(4)',function(){
+        myTd = $(this)
+        myID = myTd.find('select').val()
+        myText = myTd.find('option[value =' +myID+']').text()
+        // console.log(myText)
+        myTd.attr('id',myID).html('<p contenteditable=true>'+myText+'</p>')
+    })
+
+
+    // 抓表格資料修改
+    $('#dietaryrecord>tbody').on('click','button:nth-child(2)',function(){
+         var id = $(this).parents('tr').find('td:nth-child(7)').attr('id')
+         var dietarydate = $(this).parents('tr').find('td:nth-child(1)').text()
+         var dietarytime = $(this).parents('tr').find('td:nth-child(2)').text()
+         var foodid = $(this).parents('tr').find('td:nth-child(4)').attr('id')
+         var share = $(this).parents('tr').find('td:nth-child(5)').text()
+         var foodcalories_td = $(this).parents('tr').find('td:nth-child(4)').text()
+             re1 = /\:\d+/
+             foodcalories_re1 = foodcalories_td.match(re1)
+             re2 = /\d+/
+             foodcalories_re2 = foodcalories_re1[0].match(re2)
+            //  console.log(foodcalories_re2)
+            //  console.log(share)
+         var calories = parseFloat(share) * parseFloat(foodcalories_re2)
+        //  console.log(calories)
+         var datas = {
+            "dietarydate": dietarydate,
+            "dietarytime": dietarytime,
+            "foodid":foodid,
+            "share":share,
+            "calories":calories
+        };
+      //修改資料
+      $.ajax({
+          'url':'/api/foodrestfulDR/' + id + '/',
+          'type':'PUT',
+          'data':datas
+      }).done(function(data){
+        loadrecord()
+      })
+    })
+
+
+//jquery(ajax) 新增頁面縮放===============================================================
+
+    //新增按鈕
+    $('.btn-success').click(function(){
+        $('#divleft').attr('class','col-md-7')
+        $('#divright').attr('class','col-md-5')
+        $('#inputdate').val('')
+        $('#inputtime').val('')
+        $('#selectcategory').val('')
+        $('#selectname').val('')
+        $('#inputshare').val('')
+    })
+
+    //取消按鈕
+    $('#buttonClose').click(function(){
+        $('#divleft').attr('class','col-md-12')
+        $('#divright').attr('class','content')
+    })
+    
+    
+    
+  
+    
+// ==================================================================================
+
+})
+</script>
+
+{% endblock %}

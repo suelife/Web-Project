@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block styles %}
+{% endblock %}
+
+{% block left %}
+
+<ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'base:index' %}">
+                <i class="fa fa-fw fa-home"></i>
+                <span>首頁</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:list' %}">
+                <i class="fas fa-utensils"></i>
+                <span>食物查詢</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record' %}">
+                <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄1</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record_ajax' %}">
+                 <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄2</span>
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}
+{% block main %}
+<div class="container">
+<h2>食神歸位</h2>
+<img src="/food/static/images/eatgod.gif" alt="">
+<a href="{% url 'food:list'  %}" class="btn btn-info">食物查詢</a>
+<a href="{% url 'food:record' %}" class="btn btn-info">飲食紀錄</a>   
+</div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

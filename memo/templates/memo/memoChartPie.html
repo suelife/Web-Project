@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="/static/styles/jquery-Datepicker.css">
+
+{% endblock %}
+
+{% block left %}
+{% include "./memoNav.html" %}
+{% endblock %}
+
+{% block main %}
+<div class="card-header">
+    <i class="fas fa-chart-pie"></i>
+    待辦事項Pie Chart
+</div>
+<div class="card-body">
+    <div>
+        <span id="date-label-from">查詢起始日期:</span><input class="date" type="text" id="s_date" />
+        <span id="date-label-to">&sim;查詢結束時間:<input class="date" type="text" id="e_date" />
+            <br />
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card mb-3">
+                <div class="card-header text-white bg-secondary">
+                    <i class="fas fa-chart-pie"></i>
+                    待辦事項統計圖</div>
+                <div id ='Pie' class="card-body" style="height: 600px;">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/Chart.min.js' %}"></script>
+<script src="{% static 'scripts/moment.min.js' %}"></script>
+<script src="{% static 'scripts/jquery-Datepicker.js' %}"></script>
+<script src="{% static 'scripts/memoChartPie.js' %}"></script>
+
+{% endblock %}

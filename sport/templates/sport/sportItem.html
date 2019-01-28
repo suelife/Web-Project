@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block styles %}
+{% endblock %}
+{% block left %}
+<!-- Sidebar -->
+{% include "./sportNav.html" %}
+{% endblock %}
+{% block main %}
+<div class="card-header">
+  <i class="fa fa-table"></i>
+  運動項目
+  <div style="width: 90%; display:inline-block; text-align: right; "><button id='update'><i class="fas fa-cloud-download-alt"
+        style="color: Dodgerblue;"></i>政府資料交易平台更新</button></div>
+</div>
+<div class="card-body">
+  <!-- 表格 -->
+  <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+      <!-- 表頭 -->
+      <thead>
+        <tr>
+          {% for f in fields %}
+          {% if forloop.first %}
+          <th hidden>{{ f }}</th>
+          {% else %}
+          <th>{{ f }}</th>
+          {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <!-- 表尾 -->
+      <tfoot>
+        <tr>
+          {% for f in fields %}
+          {% if forloop.first %}
+          <th hidden>{{ f }}</th>
+          {% else %}
+          <th>{{ f }}</th>
+          {% endif %}
+          {% endfor %}
+        </tr>
+      </tfoot>
+      <tbody>
+
+        {% for row in sports %}
+        <tr>
+          <td name='id' hidden>{{ row.id }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.cal }}</td>
+          <td>{{row.mdate|date:"Y-m-d h:m:s"}}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="../../static/scripts/sportItem.js"></script>
+<script src="{% static 'scripts/jquery-dateformat.min.js'%}"></script>
+
+{% endblock %}

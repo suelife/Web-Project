@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block styles %}
+{% endblock %}
+{% block main %}
+<form method="POST">
+{% csrf_token %}
+    
+    <div class="form-group row">
+        <label for="inputdate" class="col-sm-2 col-form-label">日期(yyyy-mm-dd，必填)</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputdate" placeholder="dietary date" name="dietarydate">
+        </div>
+    </div>
+    
+      
+    <div class="form-group row">
+        <label for="inputtime" class="col-sm-2 col-form-label">時間</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputtime" placeholder="dietary time" name="dietarytime">
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="selectcategory" class="col-sm-2 col-form-label">食物類別</label>
+        <div class="col-sm-10">
+            <select id="selectcategory" name="foodcategoryid" class="form-control" placeholder="food category">  
+            {% for foodcategory in foodcategorys %}
+                <option value="{{foodcategory.foodcategoryid}}">{{foodcategory.foodcategory}}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    
+    <div class="form-group row">
+        <label for="selectname" class="col-sm-2 col-form-label">食物名稱</label>
+        <div class="col-sm-10">
+            <select id="selectname" name="foodid" class="form-control" placeholder="food name">  
+            {% for foodlist in foodlists %}
+                <option value="{{foodlist.foodid}}">{{foodlist.foodname}}(每分熱量:{{foodlist.foodcalories}})</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputshare" class="col-sm-2 col-form-label">份數(輸入數字)</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputshare" placeholder="share" name="share">
+        </div>
+    </div>
+    
+    <!-- <div class="form-group row">
+        <label for="inputfarbohydrate" class="col-sm-2 col-form-label">熱量</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputfarbohydrate" placeholder="calories" name="calories">
+        </div>
+    </div> -->
+      
+    <div class="form-group row">
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-primary"><i class="fab fa-angellist"></i> 新增</button>
+        </div>
+    </div>
+</form>
+
+
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

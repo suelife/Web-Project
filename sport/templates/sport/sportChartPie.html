@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="/static/styles/jquery-Datepicker.css">
+
+{% endblock %}
+{% block left%}
+{% include "./sportNav.html" %}
+{% endblock %}
+{% block main %}
+<div class="card-header">
+    <i class="fas fa-chart-pie"></i>
+    運動Pie Chart
+</div>
+<div class="card-body">
+    <div>
+        <span id="date-label-from">運動開始時間:</span><input class="date" type="text" id="s_date" />
+        <span id="date-label-to">&sim;運動結束時間:<input class="date" type="text" id="e_date" />
+            <br />
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card mb-3">
+                <div class="card-header text-white bg-secondary">
+                    <i class="fas fa-chart-bar"></i>
+                    個別運動次數統計表</div>
+                <div class="card-body" style="padding-left: 0px; height: 600px;" >
+                    <canvas id="myBarChart" width="100%" height="100%"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card mb-3">
+                <div class="card-header text-white bg-secondary">
+                    <i class="fas fa-chart-pie"></i>
+                    個別運動時間統計表</div>
+                <div class="card-body" style="height: 600px;">
+                    <canvas id="myPieChart" width="100%" height="100%"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/Chart.min.js' %}"></script>
+<script src="{% static 'scripts/moment.min.js' %}"></script>
+<script src="{% static 'scripts/jquery-Datepicker.js' %}"></script>
+<script src="../../static/scripts/sportChartPie.js"></script>
+{% endblock %}

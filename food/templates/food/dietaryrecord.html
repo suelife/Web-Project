@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="/static/styles/jquery-Datepicker.css">
+{% endblock %}
+
+{% block left %}
+
+<ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'base:index' %}">
+                <i class="fa fa-fw fa-home"></i>
+                <span>首頁</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:list' %}">
+                <i class="fas fa-utensils"></i>
+                <span>食物查詢</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record' %}">
+                <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄1</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record_ajax' %}">
+                 <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄2</span>
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}
+{% block main %}
+<div class="container">
+    <div>
+        <a href="{% url 'food:recordcreate' %}" class="btn btn-success"><i class="fas fa-plus-circle"></i>新增紀錄</a>
+        <a href="{% url 'food:recordchart' %}" class="btn btn-info"><i class="fas fa-chart-pie"></i>查看圖表</a>
+        <!-- 自己做的搜尋============================================================= -->
+        
+        <!-- <div style="display:inline-block ; float:right">
+        <div class="input-group">
+        <input type="text"  id="inputrecord" placeholder="Search" name="recordsearch">
+        <div class="input-group-append" >
+            <button type="submit" class="btn btn-primary" name="search"><i class="fa fa-search">搜尋</button>   
+        </div>
+        </div>
+        </div> -->
+
+        <!-- ========================================================================= -->
+    </div>
+    <hr>
+    <table id="myDataTalbe" class="table table-bordered">
+         <!-- 時間查詢================================================================ -->
+
+        <p id="date_filter">
+            <span id="date-label-from">開始時間:</span><input class="date" type="text" id="datepicker_from"/>
+            <span id="date-label-to">&sim;結束時間:<input class="date" type="text" id="datepicker_to"/>
+        </p>
+    
+        <!-- ======================================================================= -->
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>時間</th>
+                <th>食物類別</th>
+                <th>食物名稱</th>
+                <th>份數(每100克)</th>
+                <th>熱量(kcal)</th>
+                <th>編輯</th>
+            </tr>
+        </thead>
+            {% for dietaryrecord in dietaryrecords %}
+            <tr>
+                <td contenteditable=true>{{dietaryrecord.dietarydate|date:"Y-m-d"}}</td>
+                <td contenteditable=true>{{dietaryrecord.dietarytime}}</td>
+                <td contenteditable=true>{{dietaryrecord.foodid.foodcategoryid.foodcategory}}</td>
+                <td contenteditable=true>{{dietaryrecord.foodid.foodname}}</td>
+                <td contenteditable=true>{{dietaryrecord.share}}</td>
+                <td contenteditable=true>{{dietaryrecord.calories}}</td>
+                <td>
+                    <a href="{% url 'food:recorddelete' dietaryrecord.recordid %}" class="btn btn-danger"><i class="fas fa-trash-alt"></i>刪除</a>
+                    <a href="{% url 'food:recordupdate' dietaryrecord.recordid %}" class="btn btn-secondary"><i class="fas fa-user-edit"></i>修改</a>
+                </td>
+            </tr>
+            {% endfor %}
+        <thead>
+      
+        </thead>
+    </table>
+</div>    
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+{% load static %}
+<script src="{% static 'scripts/moment.min.js' %}"></script>
+<script src="{% static 'scripts/jquery-Datepicker.js' %}"></script>
+<script src="{% static 'scripts/jquery-dateformat.min.js' %}"></script>
+ 
+
+
+
+<script type="text/javascript">
+  
+
+
+$(document).ready(function () { 
+    
+
+// 表格套件========================================================================
+
+    var table = $("#myDataTalbe").DataTable({
+                    searching: true, //關閉filter功能
+                    columnDefs: [{
+                    targets: [6],
+                    orderable: false,
+                    }]
+                }); 
+
+
+// 時間查詢=========================================================================
+
+  // function desc. :初始化運動時間區間查詢的日期選擇器並建立事件
+  // parameter : 
+  // create user : Luffy Lin
+  // modify user : Luffy Lin
+  // modify date : 2018/10/05
+ 
+  $(".date").datepicker({
+    showOn: "button",
+    buttonImage: "/static/images/calender.png",
+    buttonImageOnly: true,
+    dateFormat: "yy-mm-dd",
+    
+  }).change(function () {
+    table.draw();
+  })
+
+
+  // function desc. :日期區間-datatable filter
+  // parameter : 
+  // create user : Luffy Lin
+  // modify user : Luffy Lin
+  // modify date : 2018/09/21
+  $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      var min = moment($('#datepicker_from').val())
+      var max = moment($('#datepicker_to').val())
+      var date = moment(data[0])
+
+      if (min && !isNaN(min)) {
+        if (date < min) {return false}
+      }
+      if (max && !isNaN(max)) {
+        if (date > max) {return false}
+      }
+      return true; 
+  });
+
+})
+
+</script>
+
+
+<!-- ajax的新刪修查=================================================================== -->
+
+
+<script>
+
+
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="../../static/styles/user.css">
+{% endblock %}
+{% block left %}
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:index' %}">
+                    <i class="fa fa-fw fa-home"></i>
+                    <span>首頁</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:about' %}">
+                    <i class="fa fa-fw fa-rocket"></i>
+                    <span>關於</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:contact' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>聯絡</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>代辦事項</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>家計簿</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>健康資訊</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'sport:sportrecord' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>運動管理</span></a>
+            </li>
+        </ul>
+{% endblock %}
+{% block main %}
+<div class="card mb-3" id="LoginForm">
+    <div class="card-body">
+        <div class="login-form">
+            <div class="main-div">
+                <div class="panel">
+                    <h2>使用者個人資訊</h2>
+                </div>
+                <form method="POST" accept-charset="UTF-8" role="form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 70px" id="aria-email">email</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="yourmail@example.com" name="email" id="email" aria-describedby="aria-email" value="{{ userinfo.email }}" readonly> 
+                        
+                    </div>
+                    <div class="form-group"><span id="emailmsg" class="warning"></span></div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 70px" id="aria-name">名稱</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="名稱" name="name" aria-describedby="aria-name" readonly value="{{ userinfo.name }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 70px" id="aria-birthday" >生日</span>
+                        </div>
+                        <input type="date" name="birthday" placeholder="生日" class="form-control" aria-describedby="aria-name" value="{{ userinfo.birthday|date:'Y-m-d'}}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group form-group-prepend text-center" >
+                            {% if userinfo.gender == "male" %}
+                            <input type="radio" name="gender" value="male" disabled checked> 男&nbsp;
+                            <input type="radio" name="gender" value="female" disabled> 女&nbsp;
+                            <input type="radio" name="gender" value="other" disabled> 其他
+                            {% elif userinfo.gender == "female" %}
+                            <input type="radio" name="gender" value="male" disabled> 男&nbsp;
+                            <input type="radio" name="gender" value="female" disabled checked> 女&nbsp;
+                            <input type="radio" name="gender" value="other" disabled> 其他
+                            {% else %}
+                            <input type="radio" name="gender" value="male" disabled> 男&nbsp;
+                            <input type="radio" name="gender" value="female" disabled> 女&nbsp;
+                            <input type="radio" name="gender" value="other" disabled checked> 其他
+                            {% endif %}      
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input hidden type="password" class="form-control" name="password" placeholder="Password" readonly value="{{ userinfo.password }}">
+                        <input hidden type="password" class="form-control" placeholder="confirm Password" readonly value="{{ userinfo.password }}">
+                        <span id="pswmsg" class="warning"></span>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button id="edit" type="button" class="btn  btn-info btn-block">編輯</button>
+                        <button hidden id="submit" type="submit" class="btn btn-success btn-block">確認送出</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="../../static/scripts/user.js"></script>
+<script src="../../static/scripts/register.js"></script>
+{% endblock %}

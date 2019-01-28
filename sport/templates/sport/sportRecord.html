@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="/static/styles/jquery-Datepicker.css">
+{% endblock %}
+
+{% block left %}
+<!-- Sidebar -->
+{% include "./sportNav.html" %}
+{% endblock %}
+
+{% block main %}
+<div class="card-header">
+  <i class="fa fa-table"></i> 運動記錄
+  <div style="width: 90%; display:inline-block; text-align: right; "><i id='add' class="fas fa-plus-circle fa-2x" style="color: Dodgerblue;"></i>新增</div>
+</div>
+<div class="card-body">
+  <div class="table-responsive">
+    <!-- 運動日期區間過濾datepicker -->
+    <p id="date_filter">
+      <span id="date-label-from">運動開始時間:</span><input class="date" type="text" id="datepicker_from" />
+      <span id="date-label-to">&sim;運動結束時間:<input class="date" type="text" id="datepicker_to" />
+    </p>
+    <!-- 表格 -->
+    <table class="table table-bordered" id="dataTable" width="120%" cellspacing="0">
+      <!-- 表頭 -->
+      <thead>
+        <tr>
+          <th hidden>ID</th>
+          <th hidden>運動編號</th>
+          <th>運動項目</th>
+          <th>運動日期</th>
+          <th>運動時間(分)</th>
+          <th>體重</th>
+          <th hidden>單位卡洛里</th>
+          <th>消耗卡洛里</th>
+          <th hidden>建立人員編號</th>
+          <th>建立人員</th>
+          <th>修改日期</th>
+          <th>編輯</th>
+        </tr>
+      </thead>
+      <!-- 表尾 -->
+      <tfoot>
+        <tr>
+          <th hidden>ID</th>
+          <th hidden>運動編號</th>
+          <th>運動項目</th>
+          <th>運動日期</th>
+          <th>運動時間(分)</th>
+          <th>體重</th>
+          <th hidden>單位卡洛里</th>
+          <th>消耗卡洛里</th>
+          <th hidden>建立人員編號</th>
+          <th>建立人員</th>
+          <th>修改日期</th>
+          <th>編輯</th>
+        </tr>
+      </tfoot>
+      <!-- 表身 -->
+      <tbody>
+        {% for row in datas %}
+        <tr>
+          <td name='id' hidden>{{ row.id }}</td>
+          <td name='sportid' hidden>{{row.sportid.id}}</td>
+          <td name='sportname'>{{row.sportid.name}}</td>
+          <td name='sdate'>{{row.sdate|date:"Y-m-d"}}</td>
+          <td name='duration'>{{ row.duration }}</td>
+          <td name='weight'>{{ row.weight }}</td>
+          <td name='unitcal' hidden>{{ row.sportid.cal }}</td>
+          <td name='cal'>{{ row.cal }}</td>
+          <td name='cuser' hidden>{{ row.cuser.id }}</td>
+          <td name='cusername'>{{ row.cuser.name }}</td>
+          <td name='mdate'>{{row.mdate|date:"Y-m-d H:i:s"}}</td>
+          <td><i id="edit" class="far fa-edit"></i><i id="delete" class="far fa-trash-alt" style='color: tomato;'></i></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="template" hidden>
+  <select id='sportid' name='sportid' class="datas">
+    <option name='sportname' value="0">請選</option>
+    {% for op in sports %}
+    <option name='sportname' value={{op.id}}>{{op.name}}</option>
+    {% endfor %}
+  </select>
+  <label id='cuser'>{{userid}}</label>
+  <label id='cusername'>{{username}}</label>
+  </td>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'scripts/moment.min.js' %}"></script>
+<script src="{% static 'scripts/jquery-Datepicker.js' %}"></script>
+<script src="{% static 'scripts/jquery-dateformat.min.js' %}"></script>
+<script src="../../static/scripts/sportRecord.js"></script>
+{% endblock %}

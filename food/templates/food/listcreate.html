@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block styles %}
+{% endblock %}
+{% block main %}
+<form method="POST">
+{% csrf_token %}
+    <div class="form-group row">
+        <label for="selectcategory" class="col-sm-2 col-form-label">食物類別</label>
+        <div class="col-sm-10">
+            <select id="selectcategory" name="foodcategoryid" class="form-control" placeholder="food category">  
+            {% for foodcategory in foodcategorys %}
+                <option value="{{foodcategory.foodcategoryid}}">{{foodcategory.foodcategory}}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label for="inputname" class="col-sm-2 col-form-label">食物名稱</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputname" placeholder="food name" name="foodname">
+        </div>
+      </div>
+    
+    <div class="form-group row">
+        <label for="inputcalories" class="col-sm-2 col-form-label">卡路里</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputcalories" placeholder="food calories" name="foodcalories">
+        </div>
+    </div>
+      
+    <div class="form-group row">
+        <label for="inputprotein" class="col-sm-2 col-form-label">蛋白質</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputprotein" placeholder="food protein" name="foodprotein">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputfat" class="col-sm-2 col-form-label">脂肪</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputfat" placeholder="food fat" name="foodfat">
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="inputfarbohydrate" class="col-sm-2 col-form-label">碳水化合物</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputfarbohydrate" placeholder="food farbohydrate" name="foodfarbohydrate">
+        </div>
+    </div>
+      
+    <div class="form-group row">
+        <label for="inputdescription" class="col-sm-2 col-form-label">食物描述</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="inputdescription" placeholder="food description" name="fooddescription"></textarea>
+        </div>
+    </div>
+      
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary"><i class="fab fa-angellist"></i> 新增</button>
+        </div>
+    </div>
+</form>
+
+
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

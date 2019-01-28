@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block styles %}
+<link rel="stylesheet" href="../../static/styles/user.css">
+{% endblock %}
+{% block left %}
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:index' %}">
+                    <i class="fa fa-fw fa-home"></i>
+                    <span>首頁</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:about' %}">
+                    <i class="fa fa-fw fa-rocket"></i>
+                    <span>關於</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:contact' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>聯絡</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>代辦事項</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>家計簿</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>健康資訊</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'sport:sportrecord' %}">
+                    <i class="fa fa-fw fa-phone"></i>
+                    <span>運動管理</span></a>
+            </li>
+        </ul>
+{% endblock %}
+{% block main %}
+
+<div class="card mb-3" id="LoginForm">
+    <div class="card-body">
+        <div class="login-form">
+            <div class="main-div">
+                <div class="panel">
+                    <h2>使用者登入</h2>
+                </div>
+                <form method="POST" accept-charset="UTF-8" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="yourmail@example.com" name="email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="captcha" id="captcha" placeholder="驗證碼" class="form-control">
+                        <img id="img_captcha" src="/limit/captcha"  >
+                        <button id="btn_captcha" type="button" style="margin-top: 10px">
+                            <i class="fas fa-redo-alt"></i>
+                        </button>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input name="remember" type="checkbox" value="1"> Remember Me
+                        </label>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $('#btn_captcha').click(function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/limit/captcha");
+        xhr.responseType = "arraybuffer";
+        xhr.addEventListener("load", function (event) {
+            var blob = new Blob([xhr.response], { type: "image/png" });
+            var imageUrl = window.URL.createObjectURL(blob);
+            $('#img_captcha').attr('src', imageUrl)
+        });
+        xhr.send();
+    })
+</script>
+{% endblock %}

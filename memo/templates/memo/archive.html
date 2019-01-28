@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'styles/memocss.css' %}">
+
+{% endblock %}
+
+{% block left %}
+{% include "./memoNav.html" %}
+{% endblock %}
+
+{% block main %}
+
+<div class='searchDiv'>
+    <form>
+        <div>
+            <input type="text" class="searchtext" placeholder="Search">
+            <img style='cursor:pointer;' id='searchbtn'src='/static/images/search.png'>
+        </div>
+    </form>
+</div>
+<div class='body'>
+
+    <div class='mainblock'>
+        <div class='inBlock'>       
+            <div class='blockTi'>  
+                <span>封存</span>           
+            </div>
+            
+            <div class='blockCon' id='bct'>
+                {% for memo in memoa %}
+                    <div class='cardblock'>
+                        <div class='card' id='card{{ memo.memoID }}'>
+                            <div class='cardTi'>
+                                <p class='cardTitle'>{{ memo.memoTitle }}</p>    
+                                <i class="fas fa-stream"></i>
+                            </div>
+                            <div name='cardContent' class='cardCon'>
+                                <div name='content'>{{ memo.memoContent }}</div>
+                                <div style="text-align: right">
+                                    <p>{{ memo.expiredate }}</p>
+                                    <input name='update' type="button" class="btn btn-light btn-sm" value='修改'>
+                                    <input id='delete{{ memo.memoID }}' name='delete' type="button" class="btn btn-light btn-sm" value='刪除'>
+                                </div>
+                            </div>                        
+                        </div>
+                        <div class='manage'>
+                            <form method='POST' action='/memo/update/{{ memo.memoID }}'>
+                                {% csrf_token %}
+                                <div><input type='text' value='{{ memo.memoTitle }}' name='memoTitle' style='width:100%'></div>
+                                <div><textarea style='width:100%' name='memoContent'>{{ memo.memoContent }}</textarea></div>
+                                <div><select name='memoState'>
+                                        <option value='t'>代辦</option>
+                                        <option value='d'>進行中</option>
+                                        <option value='f'>完成</option>
+                                        <option value='a' selected>封存</option>
+                                    </select>
+                                    <label>預計完成日期</label>
+                                    <input type="date" name='expiredate' value="{{ memo.expiredate|date:'Y-m-d' }}">
+                                </div>
+                                <div style='text-align: right'>
+                                    <input name='cancel' type='button' class='btn btn-light btn-sm' value='取消'>
+                                    <input type='submit' class='btn btn-light btn-sm' value='確認修改'>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div> 
+                    
+                {% endfor %}     
+            </div>
+        </div>        
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/scripts/jquery-3.3.1.min.js"></script>
+<script src="{% static 'scripts/memojs.js' %}"></script>
+<script src="{% static 'scripts/Chart.min.js' %}"></script>
+<script src="{% static 'scripts/moment.min.js' %}"></script>
+<script src="{% static 'scripts/jquery-Datepicker.js' %}"></script>
+<script src="{% static 'scripts/memoChartPie.js' %}"></script>
+<script type="text/javascript">
+  // using jQuery
+  var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+</script>
+
+{% endblock %}

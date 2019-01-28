@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+{% endblock %}
+
+{% block left %}
+
+<ul class="sidebar navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'base:index' %}">
+                <i class="fa fa-fw fa-home"></i>
+                <span>首頁</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:list' %}">
+                <i class="fas fa-utensils"></i>
+                <span>食物查詢</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record' %}">
+                <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄1</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'food:record_ajax' %}">
+                 <i class="fas fa-user-edit"></i>
+                <span>飲食紀錄2</span>
+            </a>
+        </li>
+    </ul>
+    
+{% endblock %}
+{% block main %}
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+<script>
+window.onload = function () {
+
+    var options = {
+        title: {
+            text: "Desktop OS Market Share in 2017"
+        },
+        subtitles: [{
+            text: "As of November, 2017"
+        }],
+        animationEnabled: true,
+        data: [{
+            type: "pie",
+            startAngle: 40,
+            toolTipContent: "<b>{label}</b>: {y}%",
+            showInLegend: "true",
+            legendText: "{label}",
+            indexLabelFontSize: 16,
+            indexLabel: "{label} - {y}%",
+            dataPoints: [
+                { y: 48.36, label: "Windows 7" },
+                { y: 26.85, label: "Windows 10" },
+                { y: 1.49, label: "Windows 8" },
+                { y: 6.98, label: "Windows XP" },
+                { y: 6.53, label: "Windows 8.1" },
+                { y: 2.45, label: "Linux" },
+                { y: 3.32, label: "Mac OS X 10.12" },
+                { y: 4.03, label: "Others" }
+            ]
+        }]
+    };
+    $("#chartContainer").CanvasJSChart(options);
+    
+    }
+</script>
+{% endblock %}

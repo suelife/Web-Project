@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+
+{% endblock %}
+{% block left %}
+<ul class="sidebar navbar-nav">
+	<li class="nav-item active">
+		<a class="nav-link" href="{% url 'base:index' %}">
+			<i class="fa fa-fw fa-home"></i>
+			<span>首頁</span>
+		</a>
+	</li>
+	<li class="nav-item active">
+		<a class="nav-link" href="{% url 'on_account:index' %}">
+			<i class="fa fa-fw fa-home"></i>
+			<span>記帳</span>
+		</a>
+	</li>
+	<li class="nav-item active">
+		<a class="nav-link" href="{% url 'on_account:chatarea' %}">
+			<i class="fa fa-fw fa-rocket"></i>
+			<span>報表</span>
+		</a>
+	</li>
+</ul>
+{% endblock %}
+{% block main %}
+<div class="container">
+	<div>
+		<select name="chartsel" id="chartsel">
+			<option value="piechart">圓餅圖</option>
+			<option value="columnchart">長條圖</option>
+		</select>
+		<select name="selmonth" id="selmonth">
+			<option value="01">一月</option>
+			<option value="02">二月</option>
+			<option value="03">三月</option>
+			<option value="04">四月</option>
+			<option value="05">五月</option>
+			<option value="06">六月</option>
+			<option value="07">七月</option>
+			<option value="08">八月</option>
+			<option value="09">九月</option>
+			<option value="10">十月</option>
+			<option value="11">十一月</option>
+			<option value="12">十二月</option>
+			<option value="13">上半年</option>
+			<option value="14">下半年</option>
+			<option value="15">整年</option>
+			<option value="16">全部</option>
+		</select>
+	</div>
+	<div id="chartContainer" style="height: 600px; width: 100%;"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="../../static/scripts/on_accountPie.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+{% endblock %}
